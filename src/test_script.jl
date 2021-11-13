@@ -27,6 +27,8 @@ engine=ExprEngine()
 x,y,z=engine.([:x,:y,:z])
 expr=x+y*2+z*x
 ssatape(expr,term_map)
+ssatape(:+,[ssatape(1.0),ssatape(2.0)])
+ssatape.compute
 term=expr.termpool.array[5]
 ssatape.(expr.termpool.array)
 

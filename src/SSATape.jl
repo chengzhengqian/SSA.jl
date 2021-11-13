@@ -227,8 +227,9 @@ function evalTape(num::Number,tape::SSATape)
     return getfromB(number,num)
 end
 
-
-
+"""
+we make a convenient function to this one see below
+"""
 function evalTape(ssaform::SSAForm,tape::SSATape)
     compute=tape.compute
     if(!hasB(compute,ssaform))
@@ -237,6 +238,14 @@ function evalTape(ssaform::SSAForm,tape::SSATape)
     end
     return getfromB(compute,ssaform)
 end
+
+"""
+convert to SSAForm
+"""
+function evalTape(op::Symbol,args::Array,ssatape::SSATape)
+    ssatape(SSAForm(op,args))
+end
+
 
 """
 for the MathExpr library, to evaluate the single term.
@@ -293,14 +302,31 @@ Here, we update fucntion so that when the term is not in term_map, we evalaute t
 term_map=Dict{Term,Node}()
 """
 function evalTape(expr::SymExpr, term_map::Dict, ssatape::SSATape)
-    ssatape(SSAForm(:+,[ssatape(v,ssatape(expr.termpool(k),term_map)) for (k,v) in expr.coefficient]))
+    args=[ssatape(v,ssatape(expr.termpool(k),term_map)) for (k,v) in expr.coefficient]
+    n_args=length(args)
+    if(n_args==0)
+        ssatape(0.0)
+    elseif(n_args==1)
+        args[1]
+    else
+        ssatape(SSAForm(:+,args))
+    end    
 end
 
 """
 this one directly evaluate the expr, without the term_map. When we fully evaluate the terms in termpool, this two method should yield the same result
+We should check whether the number of args is 0,1 >2
 """
 function evalTape(expr::SymExpr, ssatape::SSATape)
-    ssatape(SSAForm(:+,[ssatape(v,ssatape(expr.termpool(k))) for (k,v) in expr.coefficient]))
+    args=[ssatape(v,ssatape(expr.termpool(k))) for (k,v) in expr.coefficient]
+    n_args=length(args)
+    if(n_args==0)
+        ssatape(0.0)
+    elseif(n_args==1)
+        args[1]
+    else
+        ssatape(SSAForm(:+,args))
+    end    
 end
 
 
