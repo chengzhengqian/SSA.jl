@@ -5,4 +5,6 @@ version = "0.1.0"
 
 [deps]
 JITFunc = "c93d37db-b35c-416c-a43c-2441531e91a0"
+JLD = "4138dd39-2aa7-5051-a626-17a0bb65d9c8"
+MathExpr = "eccf3ead-c2c7-44b9-8277-da356efd68a9"
 SymEngine = "123dc426-2d89-5057-bbad-38513e3affd8"
